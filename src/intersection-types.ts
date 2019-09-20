@@ -3,7 +3,7 @@
  * Intersection types are useful when we'd like to create a type that has
  * the combined properties of two or more types. We create intersection types
  * with the `&` operator
- **/
+ */
 
 function extend <T, U>(target: T, source: U): T & U {
   let result = {} as (T & U);
@@ -20,14 +20,18 @@ function extend <T, U>(target: T, source: U): T & U {
   return result;
 }
 
+
+
+
+
+
+
+
 class Extendable {
   public extend <T>(another: T): this & T {
     return extend(this, another);
   }
 }
-
-
-
 
 
 
@@ -59,4 +63,3 @@ readerWriter.write();
 const writerReader: ReaderWriter = myWriter.extend(myReader);
 writerReader.read();
 writerReader.write();
-

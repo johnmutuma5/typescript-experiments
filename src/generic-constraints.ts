@@ -21,7 +21,9 @@ interface NameGetter <T>{
   (obj: T): string;
 }
 
-
+if (true) {
+ 
+}
 
 
 
