@@ -4,6 +4,8 @@ interface Observer<T> {
   onCompleted?: (val?: any) => any,
 }
 
+type OnNextOrObserver<T> = (val: T) => void | Observer<T>;
+
 interface EventSource {
   addEventListener: (eventType: string, handler: (event: any) => void) => void,
     removeEventListener: (callbackFn: (event: any) => void) => void,
@@ -23,19 +25,21 @@ interface EventSource {
  *
  */
 export class Observable<T> {
-  private _subscribe: any;
+  private _subscribe: (obs: Observer<T>) => () => void;
 
-  constructor(subscribe?: (obs: Observer<T>) => () => any) {
+  constructor(subscribe?: (obs: Observer<T>) => () => void) {
     if(!!subscribe)
       this._subscribe = subscribe;
+    else
+      this._subscribe = (obs: Observer<T>) => (() => {});
   }
 
-  subscribe(onNext: any, onError?: any, onComplete?: any) {
+  subscribe(onNext: OnNextOrObserver<T>, onError?: any, onComplete?: any): () => void {
     if(typeof onNext === 'function')
       return this._subscribe({
         onNext,
         onError: onError || (() => {}),
-        onComplete: onComplete || (() => {}),
+        onCompleted: onComplete || (() => {}),
       });
     else
       return this._subscribe(onNext); // if it's a subscriber object
@@ -144,8 +148,8 @@ export class Observable<T> {
    * :::::::::::::::8 ::::::::::::::8 :::::::::::::::::::::::::::::::::::::::::::
    * :::::::::::::::..::::::::::::::..:::::::::::::::::::::::::::::::::::::::::::
    */
-  map(projectionFn: (val: T) => any): Observable<any> {
-    return new Observable<any>((obs: Observer<T>) => {
+  map<U>(projectionFn: (val: T) => U): Observable<U> {
+    return new Observable<U>((obs: Observer<U>) => {
       return this.subscribe(
         (val: T) => obs.onNext(projectionFn(val)),
         (error: any) => obs.onError && obs.onError(error),

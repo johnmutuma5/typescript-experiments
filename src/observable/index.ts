@@ -54,3 +54,39 @@ obsFromEvent$.subscribe((event: any) => console.log('2nd subscriber for click ev
 // click after 3secs
 setTimeout(() => document.click(), 3000);
 console.log('Document will be clicked after 3sec');
+
+
+/**
+ *
+ *                                                                                                                              
+ * .oPYo. 8                                        8      8                                              o                      
+ * 8    8 8                                        8      8                                              8                      
+ * 8    8 8oPYo. .oPYo. .oPYo. oPYo. o    o .oPYo. 8oPYo. 8 .oPYo.   .oPYo. .oPYo. .oPYo. oPYo. .oPYo.  o8P .oPYo. oPYo. .oPYo. 
+ * 8    8 8    8 Yb..   8oooo8 8  `' Y.  .P .oooo8 8    8 8 8oooo8   8    8 8    8 8oooo8 8  `' .oooo8   8  8    8 8  `' Yb..   
+ * 8    8 8    8   'Yb. 8.     8     `b..d' 8    8 8    8 8 8.       8    8 8    8 8.     8     8    8   8  8    8 8       'Yb. 
+ * `YooP' `YooP' `YooP' `Yooo' 8      `YP'  `YooP8 `YooP' 8 `Yooo'   `YooP' 8YooP' `Yooo' 8     `YooP8   8  `YooP' 8     `YooP' 
+ * :.....::.....::.....::.....:..::::::...:::.....::.....:..:.....::::.....:8 ....::.....:..:::::.....:::..::.....:..:::::.....:
+ * :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::8 ::::::::::::::::::::::::::::::::::::::::::::::::::
+ * :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::..::::::::::::::::::::::::::::::::::::::::::::::::::
+ *
+ */
+
+/**
+ *
+ *                                                                                          
+ * .oPYo. 8                                        8      8                                 
+ * 8    8 8                                        8      8                                 
+ * 8    8 8oPYo. .oPYo. .oPYo. oPYo. o    o .oPYo. 8oPYo. 8 .oPYo.    ooYoYo. .oPYo. .oPYo. 
+ * 8    8 8    8 Yb..   8oooo8 8  `' Y.  .P .oooo8 8    8 8 8oooo8    8' 8  8 .oooo8 8    8 
+ * 8    8 8    8   'Yb. 8.     8     `b..d' 8    8 8    8 8 8.        8  8  8 8    8 8    8 
+ * `YooP' `YooP' `YooP' `Yooo' 8      `YP'  `YooP8 `YooP' 8 `Yooo' 88 8  8  8 `YooP8 8YooP' 
+ * :.....::.....::.....::.....:..::::::...:::.....::.....:..:.....:..:..:..:..:.....:8 ....:
+ * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::8 :::::
+ * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::..:::::
+ *
+ */
+
+const fromNumMapToStringObs$: Observable<string> = Observable.of<number>(1, 2, 3, 4, 5)
+  .map<string>((val: number) => `mapped to: ${val * 2}`);
+
+const unsubscribe: () => void = fromNumMapToStringObs$.subscribe((val: string) => console.log(val))
