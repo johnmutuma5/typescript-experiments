@@ -82,4 +82,32 @@ export class Observable<T> {
       };
     });
   }
+  
+  /**
+   *                                                           
+   *  d'b                      .oPYo.                       o  
+   *  8                        8.                           8  
+   * o8P  oPYo. .oPYo. ooYoYo. `boo   o    o .oPYo. odYo.  o8P 
+   *  8   8  `' 8    8 8' 8  8 .P     Y.  .P 8oooo8 8' `8   8  
+   *  8   8     8    8 8  8  8 8      `b..d' 8.     8   8   8  
+   *  8   8     `YooP' 8  8  8 `YooP'  `YP'  `Yooo' 8   8   8  
+   * :..::..:::::.....:..:..:..:.....:::...:::.....:..::..::..:
+   * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+   * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+   *
+   */
+  static fromEvent<U>(source: any, eventType: string) {
+    return new Observable((obs: Observer<U>) => {
+      const callbackFn =  (event: any) => {
+        try {
+          obs.onNext(event);
+        } catch(error) {
+          obs.onError && obs.onError(error);
+        }
+        obs.onCompleted && obs.onCompleted();
+      }
+      source.addEVentListener(eventType, callbackFn);
+      return () => source.removeEventListener(callbackFn);
+    }); 
+  }
 }
