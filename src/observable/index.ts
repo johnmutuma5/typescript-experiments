@@ -1,6 +1,7 @@
 import { Observable } from './base/observable';
 import { MockDocument } from './utils/mock-document';
 
+console.log('\n\nCreating observables');
 /**
  *                                                                                
  * .oPYo. 8                                        8      8                   d'b 
@@ -86,7 +87,52 @@ console.log('Document will be clicked after 3sec');
  *
  */
 
-const fromNumMapToStringObs$: Observable<string> = Observable.of<number>(1, 2, 3, 4, 5)
+console.log('\n\nOperators');
+console.log('Observable.map')
+const ofNumMapToStringObs$: Observable<string> = Observable.of<number>(1, 2, 3, 4, 5)
   .map<string>((val: number) => `mapped to: ${val * 2}`);
 
-const unsubscribe: () => void = fromNumMapToStringObs$.subscribe((val: string) => console.log(val))
+const unsubscribe: () => void = ofNumMapToStringObs$.subscribe((val: string) => console.log(val))
+
+/**
+ *
+ *                                                                                                
+ * .oPYo. 8                                        8      8            d'b  o 8   o               
+ * 8    8 8                                        8      8            8      8   8               
+ * 8    8 8oPYo. .oPYo. .oPYo. oPYo. o    o .oPYo. 8oPYo. 8 .oPYo.    o8P  o8 8  o8P .oPYo. oPYo. 
+ * 8    8 8    8 Yb..   8oooo8 8  `' Y.  .P .oooo8 8    8 8 8oooo8     8    8 8   8  8oooo8 8  `' 
+ * 8    8 8    8   'Yb. 8.     8     `b..d' 8    8 8    8 8 8.         8    8 8   8  8.     8     
+ * `YooP' `YooP' `YooP' `Yooo' 8      `YP'  `YooP8 `YooP' 8 `Yooo' 88  8    8 8   8  `Yooo' 8     
+ * :.....::.....::.....::.....:..::::::...:::.....::.....:..:.....:..::..:::....::..::.....:..::::
+ * :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ * :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ *
+ */
+console.log('\n\nObservable.filter');
+const filteredPositivesOfNumObs$: Observable<number> = Observable.of<number>(-2, 1, -3, 5, 0,  2, -1)
+  .filter((val: number) => val >= 0);
+
+filteredPositivesOfNumObs$.subscribe(console.log);
+
+
+/**
+ *
+                                                                                                                          
+.oPYo. 8              o        o                                                          8    d'b  o 8   o               
+8    8 8                                                                                  8    8      8   8               
+8      8oPYo. .oPYo. o8 odYo. o8 odYo. .oPYo.   ooYoYo. .oPYo. .oPYo.   .oPYo. odYo. .oPYo8   o8P  o8 8  o8P .oPYo. oPYo. 
+8      8    8 .oooo8  8 8' `8  8 8' `8 8    8   8' 8  8 .oooo8 8    8   .oooo8 8' `8 8    8    8    8 8   8  8oooo8 8  `' 
+8    8 8    8 8    8  8 8   8  8 8   8 8    8   8  8  8 8    8 8    8   8    8 8   8 8    8    8    8 8   8  8.     8     
+`YooP' 8    8 `YooP8  8 8   8  8 8   8 `YooP8   8  8  8 `YooP8 8YooP'   `YooP8 8   8 `YooP'    8    8 8   8  `Yooo' 8     
+:.....:..:::..:.....::....::..:....::..:....8 ::..:..:..:.....:8 ....::::.....:..::..:.....::::..:::....::..::.....:..::::
+:::::::::::::::::::::::::::::::::::::::::ooP'.:::::::::::::::::8 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:::::::::::::::::::::::::::::::::::::::::...:::::::::::::::::::..:::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ *
+ */
+console.log('\n\nChaining map and filter');
+const filteredMappedPositivesOfNumObs$: Observable<string> = Observable.of<number>(-2, 1, -3, 5, 0,  2, -1)
+  .filter((val: number) => val >= 0)
+  .map((val: number) => `Positive value: ${val}`);
+
+filteredMappedPositivesOfNumObs$.subscribe(console.log);
+
