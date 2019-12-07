@@ -103,7 +103,8 @@ export class Observable<T> {
    */
   static fromEvent<U>(eventSource: EventSource, eventType: string) {
     return new Observable((obs: Observer<U>) => {
-      const callbackFn =  (event: any) => {
+
+      const callbackFn = (event: any) => {
         try {
           obs.onNext(event);
         } catch(error) {
@@ -112,7 +113,44 @@ export class Observable<T> {
         obs.onCompleted && obs.onCompleted();
       }
       eventSource.addEventListener(eventType, callbackFn);
+
       return () => eventSource.removeEventListener(callbackFn);
     }); 
+  }
+
+  /**
+   *
+   *                                                                    
+   * .oPYo.  .oPYo. .oPYo.  .oPYo.      .oo ooooo .oPYo.  .oPYo. .oPYo. 
+   * 8    8  8    8 8.      8   `8     .P 8   8   8    8  8   `8 8      
+   * 8    8 o8YooP' `boo   o8YooP'    .P  8   8   8    8 o8YooP' `Yooo. 
+   * 8    8  8      .P      8   `b   oPooo8   8   8    8  8   `b     `8 
+   * 8    8  8      8       8    8  .P    8   8   8    8  8    8      8 
+   * `YooP'  8      `YooP'  8    8 .P     8   8   `YooP'  8    8 `YooP' 
+   * :.....::..::::::.....::..:::....:::::..::..:::.....::..:::..:.....:
+   * :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+   * :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+   *
+   */
+  /**
+   *                                                                             
+   *                         .oPYo.                              o               
+   *                         8    8                              8               
+   * ooYoYo. .oPYo. .oPYo.   8    8 .oPYo. .oPYo. oPYo. .oPYo.  o8P .oPYo. oPYo. 
+   * 8' 8  8 .oooo8 8    8   8    8 8    8 8oooo8 8  `' .oooo8   8  8    8 8  `' 
+   * 8  8  8 8    8 8    8   8    8 8    8 8.     8     8    8   8  8    8 8     
+   * 8  8  8 `YooP8 8YooP'   `YooP' 8YooP' `Yooo' 8     `YooP8   8  `YooP' 8     
+   * ..:..:..:.....:8 ....::::.....:8 ....::.....:..:::::.....:::..::.....:..::::
+   * :::::::::::::::8 ::::::::::::::8 :::::::::::::::::::::::::::::::::::::::::::
+   * :::::::::::::::..::::::::::::::..:::::::::::::::::::::::::::::::::::::::::::
+   */
+  map(projectionFn: (val: T) => any): Observable<any> {
+    return new Observable<any>((obs: Observer<T>) => {
+      return this.subscribe(
+        (val: T) => obs.onNext(projectionFn(val)),
+        (error: any) => obs.onError && obs.onError(error),
+        () => obs.onCompleted && obs.onCompleted(),
+      );
+    });
   }
 }
