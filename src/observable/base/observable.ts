@@ -4,6 +4,11 @@ interface Observer<T> {
   onCompleted?: (val?: any) => any,
 }
 
+interface EventSource {
+  addEventListener: (eventType: string, handler: (event: any) => void) => void,
+    removeEventListener: (callbackFn: (event: any) => void) => void,
+}
+
 /**
  *                                                                                                 
  * .oPYo. 8                                        8      8          .oPYo. 8                      
@@ -96,7 +101,7 @@ export class Observable<T> {
    * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
    *
    */
-  static fromEvent<U>(source: any, eventType: string) {
+  static fromEvent<U>(eventSource: EventSource, eventType: string) {
     return new Observable((obs: Observer<U>) => {
       const callbackFn =  (event: any) => {
         try {
@@ -106,8 +111,8 @@ export class Observable<T> {
         }
         obs.onCompleted && obs.onCompleted();
       }
-      source.addEVentListener(eventType, callbackFn);
-      return () => source.removeEventListener(callbackFn);
+      eventSource.addEventListener(eventType, callbackFn);
+      return () => eventSource.removeEventListener(callbackFn);
     }); 
   }
 }
