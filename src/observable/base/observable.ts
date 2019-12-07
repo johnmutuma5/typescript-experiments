@@ -157,4 +157,28 @@ export class Observable<T> {
       );
     });
   }
+
+  /**
+   *
+   *                                                                                   
+   *  d'b  o 8   o                 .oPYo.                              o               
+   *  8      8   8                 8    8                              8               
+   * o8P  o8 8  o8P .oPYo. oPYo.   8    8 .oPYo. .oPYo. oPYo. .oPYo.  o8P .oPYo. oPYo. 
+   *  8    8 8   8  8oooo8 8  `'   8    8 8    8 8oooo8 8  `' .oooo8   8  8    8 8  `' 
+   *  8    8 8   8  8.     8       8    8 8    8 8.     8     8    8   8  8    8 8     
+   *  8    8 8   8  `Yooo' 8       `YooP' 8YooP' `Yooo' 8     `YooP8   8  `YooP' 8     
+   * :..:::....::..::.....:..:::::::.....:8 ....::.....:..:::::.....:::..::.....:..::::
+   * :::::::::::::::::::::::::::::::::::::8 :::::::::::::::::::::::::::::::::::::::::::
+   * :::::::::::::::::::::::::::::::::::::..:::::::::::::::::::::::::::::::::::::::::::
+   *
+   */
+  filter(predicateFn: (val: T) => boolean): Observable<T> {
+    return new Observable<T>((obs: Observer<T>) => {
+      return  this.subscribe(
+        (val: T) => { if(!!predicateFn(val)) obs.onNext(val); },
+        (error: any) => obs.onError && obs.onError(error),
+        () => obs.onCompleted && obs.onCompleted(),
+      );
+    });
+  }
 }
