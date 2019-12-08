@@ -181,4 +181,39 @@ export class Observable<T> {
       );
     });
   }
+
+  /**
+   *
+   *                                                                                 
+   *   o         8               .oPYo.                              o               
+   *   8         8               8    8                              8               
+   *  o8P .oPYo. 8  .o  .oPYo.   8    8 .oPYo. .oPYo. oPYo. .oPYo.  o8P .oPYo. oPYo. 
+   *   8  .oooo8 8oP'   8oooo8   8    8 8    8 8oooo8 8  `' .oooo8   8  8    8 8  `' 
+   *   8  8    8 8 `b.  8.       8    8 8    8 8.     8     8    8   8  8    8 8     
+   *   8  `YooP8 8  `o. `Yooo'   `YooP' 8YooP' `Yooo' 8     `YooP8   8  `YooP' 8     
+   * ::..::.....:..::...:.....::::.....:8 ....::.....:..:::::.....:::..::.....:..::::
+   * :::::::::::::::::::::::::::::::::::8 :::::::::::::::::::::::::::::::::::::::::::
+   * :::::::::::::::::::::::::::::::::::..:::::::::::::::::::::::::::::::::::::::::::
+   *
+   */
+  take(countItems: number): Observable<T> {
+    return new Observable<T>((observer: Observer<T>) => {
+      let currentCount = 0;
+      const unsubscribe =  this.subscribe(
+        (val: T) => {
+          if(currentCount <= countItems)
+            observer.onNext(val);
+          else {
+            observer.onCompleted && observer.onCompleted();
+            observer = { onNext: () => {}, onError: () => {}, onCompleted: () => {}, }
+          }
+          ++currentCount;
+        },
+        (error: any) => observer.onError && observer.onError(error),
+        () => observer.onCompleted && observer.onCompleted(),
+      ); 
+
+      return unsubscribe;
+    });
+  }
 }

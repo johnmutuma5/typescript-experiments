@@ -52,9 +52,11 @@ const document = new MockDocument();
 const obsFromEvent$: Observable<any> =  Observable.fromEvent(document, 'click');
 obsFromEvent$.subscribe((event: any) => console.log('1st subscriber for click event: ', event));
 obsFromEvent$.subscribe((event: any) => console.log('2nd subscriber for click event: ', event));
+console.log('Document will be clicked after a sec');
+setTimeout(() => document.click(), 1000);
 // click after 3secs
 setTimeout(() => document.click(), 3000);
-console.log('Document will be clicked after 3sec');
+console.log('Document will be clicked again after 3sec');
 
 
 /**
@@ -136,3 +138,27 @@ const filteredMappedPositivesOfNumObs$: Observable<string> = Observable.of<numbe
 
 filteredMappedPositivesOfNumObs$.subscribe(console.log);
 
+
+/**
+ *
+                                                                                             
+.oPYo. 8                                        8      8             o         8             
+8    8 8                                        8      8             8         8             
+8    8 8oPYo. .oPYo. .oPYo. oPYo. o    o .oPYo. 8oPYo. 8 .oPYo.     o8P .oPYo. 8  .o  .oPYo. 
+8    8 8    8 Yb..   8oooo8 8  `' Y.  .P .oooo8 8    8 8 8oooo8      8  .oooo8 8oP'   8oooo8 
+8    8 8    8   'Yb. 8.     8     `b..d' 8    8 8    8 8 8.          8  8    8 8 `b.  8.     
+`YooP' `YooP' `YooP' `Yooo' 8      `YP'  `YooP8 `YooP' 8 `Yooo' 88   8  `YooP8 8  `o. `Yooo' 
+:.....::.....::.....::.....:..::::::...:::.....::.....:..:.....:..:::..::.....:..::...:.....:
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ *
+ */
+console.log('\n\nObservable.take');
+const takeThreeOfNumberObs$ = Observable.of(1, 2, 3, 4, 5, 6)
+  .take(2);
+  
+const unsubscribeFromTake = takeThreeOfNumberObs$.subscribe(
+  console.log,
+  console.error,
+  () => console.log('Hello, completed'),
+);
