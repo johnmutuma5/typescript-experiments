@@ -1,5 +1,5 @@
 import { Observable } from './base/observable';
-import { MockDocument } from './utils/mock-document';
+import { MockDocument, MockEvent } from './utils/mock-document';
 
 console.log('\n\nCreating observables');
 /**
@@ -162,3 +162,39 @@ const unsubscribeFromTake = takeThreeOfNumberObs$.subscribe(
   console.error,
   () => console.log('Hello, completed'),
 );
+
+
+/**
+ *
+ *                                                                                                                                 
+ * .oPYo. 8                                        8      8                             o   o         8      o     o               
+ * 8    8 8                                        8      8                                 8         8      8b   d8               
+ * 8    8 8oPYo. .oPYo. .oPYo. oPYo. o    o .oPYo. 8oPYo. 8 .oPYo.    .oPYo. o   o   o o8  o8P .oPYo. 8oPYo. 8`b d'8 .oPYo. .oPYo. 
+ * 8    8 8    8 Yb..   8oooo8 8  `' Y.  .P .oooo8 8    8 8 8oooo8    Yb..   Y. .P. .P  8   8  8    ' 8    8 8 `o' 8 .oooo8 8    8 
+ * 8    8 8    8   'Yb. 8.     8     `b..d' 8    8 8    8 8 8.          'Yb. `b.d'b.d'  8   8  8    . 8    8 8     8 8    8 8    8 
+ * `YooP' `YooP' `YooP' `Yooo' 8      `YP'  `YooP8 `YooP' 8 `Yooo' 88 `YooP'  `Y' `Y'   8   8  `YooP' 8    8 8     8 `YooP8 8YooP' 
+ * :.....::.....::.....::.....:..::::::...:::.....::.....:..:.....:..::.....:::..::..:::..::..::.....:..:::....::::..:.....:8 ....:
+ * :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::8 :::::
+ * :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::..:::::
+ *
+ */
+console.log('\n\nObservable.switchMap');
+const switchDoc1 = new MockDocument();
+const innerSwitchDoc1 = new MockDocument();
+const switchClicks$ = Observable.fromEvent<MockEvent>(switchDoc1, 'click');
+const innerSwitchClicks$ = Observable.fromEvent<MockEvent>(innerSwitchDoc1, 'click');
+
+const switchMapObs$ = switchClicks$.switchMap<string>((event: MockEvent) => {
+  return innerSwitchClicks$.map<string>((innerEvent: MockEvent) => {
+    return `Mapped from parent: ${event.clickTime}. Event time: ${innerEvent.clickTime}`;
+  });
+});
+
+switchMapObs$.subscribe(console.log);
+
+console.log('clicking the outer event source twice. Only most recent clicked should be handled');
+console.log('first click: shall not be handled with switchMap');
+switchDoc1.click();
+console.log('second click. Only the recent observable emits are handled with switchMap');
+switchDoc1.click();
+innerSwitchDoc1.click();

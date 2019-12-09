@@ -216,4 +216,33 @@ export class Observable<T> {
       return unsubscribe;
     });
   }
+
+  /**
+   *
+   *                                                                                                                    
+   *                   o   o         8      o     o                 .oPYo.                              o               
+   *                       8         8      8b   d8                 8    8                              8               
+   * .oPYo. o   o   o o8  o8P .oPYo. 8oPYo. 8`b d'8 .oPYo. .oPYo.   8    8 .oPYo. .oPYo. oPYo. .oPYo.  o8P .oPYo. oPYo. 
+   * Yb..   Y. .P. .P  8   8  8    ' 8    8 8 `o' 8 .oooo8 8    8   8    8 8    8 8oooo8 8  `' .oooo8   8  8    8 8  `' 
+   *   'Yb. `b.d'b.d'  8   8  8    . 8    8 8     8 8    8 8    8   8    8 8    8 8.     8     8    8   8  8    8 8     
+   * `YooP'  `Y' `Y'   8   8  `YooP' 8    8 8     8 `YooP8 8YooP'   `YooP' 8YooP' `Yooo' 8     `YooP8   8  `YooP' 8     
+   * :.....:::..::..:::..::..::.....:..:::....::::..:.....:8 ....::::.....:8 ....::.....:..:::::.....:::..::.....:..::::
+   * ::::::::::::::::::::::::::::::::::::::::::::::::::::::8 ::::::::::::::8 :::::::::::::::::::::::::::::::::::::::::::
+   * ::::::::::::::::::::::::::::::::::::::::::::::::::::::..::::::::::::::..:::::::::::::::::::::::::::::::::::::::::::
+   *
+   */
+  switchMap<U>(switchFun: (val: T) => Observable<U>) {
+    return new Observable<U>((observer: Observer<U>) => {
+      let unsubscribePreviousInnerObserver = () => {};
+      return this.subscribe(
+        (outerVal) => {
+          unsubscribePreviousInnerObserver();
+          const innerObs$ = switchFun(outerVal);
+          unsubscribePreviousInnerObserver = innerObs$.subscribe(
+            (innerVal) => observer.onNext(innerVal)
+          );
+        }
+      );
+    });
+  }
 }
