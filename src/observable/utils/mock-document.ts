@@ -1,6 +1,6 @@
 
 type MockEventListener =  (event: any) => void;
-type MockEvent = {
+export type MockEvent = {
   target: string,
   clickTime: Date | null,
 };
@@ -16,7 +16,11 @@ export class MockDocument {
     this.onClickListeners.push(listener);
   }
 
-  removeEventListener() { }
+  removeEventListener(callbackFn: MockEventListener) {
+    this.onClickListeners  = this.onClickListeners.filter((listener: MockEventListener) => {
+      return listener !== callbackFn;
+    });
+  }
 
   click = () => {
     this.event.clickTime = new Date();

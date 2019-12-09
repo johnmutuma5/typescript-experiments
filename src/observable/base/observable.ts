@@ -8,7 +8,7 @@ type OnNextOrObserver<T> = (val: T) => void | Observer<T>;
 
 interface EventSource {
   addEventListener: (eventType: string, handler: (event: any) => void) => void,
-    removeEventListener: (callbackFn: (event: any) => void) => void,
+  removeEventListener: (callbackFn: (event: any) => void) => void,
 }
 
 /**
