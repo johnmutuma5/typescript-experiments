@@ -282,3 +282,31 @@ export const combineLatest = (...args: Observable<any>[]) => {
     return () => unsubscribers.forEach(fn => fn());
   });
 };
+
+
+/**
+ *
+ *                                                                                           
+ *  o         o                             8                                o               
+ *            8                             8                                8               
+ * o8 odYo.  o8P .oPYo. oPYo. o    o .oPYo. 8   .oPYo. oPYo. .oPYo. .oPYo.  o8P .oPYo. oPYo. 
+ *  8 8' `8   8  8oooo8 8  `' Y.  .P .oooo8 8   8    ' 8  `' 8oooo8 .oooo8   8  8    8 8  `' 
+ *  8 8   8   8  8.     8     `b..d' 8    8 8   8    . 8     8.     8    8   8  8    8 8     
+ *  8 8   8   8  `Yooo' 8      `YP'  `YooP8 8   `YooP' 8     `Yooo' `YooP8   8  `YooP' 8     
+ * :....::..::..::.....:..::::::...:::.....:..:::.....:..:::::.....::.....:::..::.....:..::::
+ * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ *
+ *
+ */
+export const interval = (time: number) => {
+  let currentVal: number = 0;
+  return new Observable<number>((observer: Observer<number>) => {
+    const clearId = setInterval(() => {
+      observer.onNext(++currentVal); 
+    }, time);
+    return () => {
+      clearInterval(clearId)
+    };
+  });
+}
