@@ -248,3 +248,37 @@ export class Observable<T> {
     });
   }
 }
+
+/*
+ *
+ *                                                                                   
+ *                       8       o              o              o                  o  
+ *                       8                      8              8                  8  
+ * .oPYo. .oPYo. ooYoYo. 8oPYo. o8 odYo. .oPYo. 8     .oPYo.  o8P .oPYo. .oPYo.  o8P 
+ * 8    ' 8    8 8' 8  8 8    8  8 8' `8 8oooo8 8     .oooo8   8  8oooo8 Yb..     8  
+ * 8    . 8    8 8  8  8 8    8  8 8   8 8.     8     8    8   8  8.       'Yb.   8  
+ * `YooP' `YooP' 8  8  8 `YooP'  8 8   8 `Yooo' 8oooo `YooP8   8  `Yooo' `YooP'   8  
+ * :.....::.....:..:..:..:.....::....::..:.....:......:.....:::..::.....::.....:::..:
+ * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ *
+ *
+ */
+
+export const combineLatest = (...args: Observable<any>[]) => {
+  const combinedOutputs: any[] = new Array(args.length).fill(null);
+
+  const unsubscribers: (() => void)[] = new Array<() => void>();
+  return new Observable<any>((observer: Observer<any>) => {
+    args.forEach((observable: Observable<any>, index: number) => {
+      unsubscribers.push(observable.subscribe(
+        (val: any) => {
+          combinedOutputs[index] = val;
+          if(combinedOutputs.indexOf(null) < 0)
+            observer.onNext(combinedOutputs);
+        },
+      )); 
+    });
+    return () => unsubscribers.forEach(fn => fn());
+  });
+};
