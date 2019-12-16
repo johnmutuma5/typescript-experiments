@@ -201,7 +201,7 @@ export class Observable<T> {
       let currentCount = 0;
       const unsubscribe =  this.subscribe(
         (val: T) => {
-          if(currentCount <= countItems)
+          if(currentCount < countItems)
             observer.onNext(val);
           else {
             observer.onCompleted && observer.onCompleted();
