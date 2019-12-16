@@ -239,7 +239,9 @@ export class Observable<T> {
           unsubscribePreviousInnerObserver();
           const innerObs$ = switchFun(outerVal);
           unsubscribePreviousInnerObserver = innerObs$.subscribe(
-            (innerVal) => observer.onNext(innerVal)
+            (innerVal) => observer.onNext(innerVal),
+            (error: any) => observer.onError && observer.onError(error),
+            () => observer.onCompleted && observer.onCompleted(),
           );
         }
       );
