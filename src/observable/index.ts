@@ -1,4 +1,4 @@
-import { Observable } from './base/observable';
+import { Observable, combineLatest, interval } from './base/observable';
 import { MockDocument, MockEvent } from './utils/mock-document';
 
 console.log('\n\nCreating observables');
@@ -61,6 +61,27 @@ console.log('Document will be clicked again after 3sec');
 
 /**
  *
+ *
+ *                                            
+ *  o         o                             8 
+ *            8                             8 
+ * o8 odYo.  o8P .oPYo. oPYo. o    o .oPYo. 8 
+ *  8 8' `8   8  8oooo8 8  `' Y.  .P .oooo8 8 
+ *  8 8   8   8  8.     8     `b..d' 8    8 8 
+ *  8 8   8   8  `Yooo' 8      `YP'  `YooP8 8 
+ * :....::..::..::.....:..::::::...:::.....:..
+ * :::::::::::::::::::::::::::::::::::::::::::
+ * :::::::::::::::::::::::::::::::::::::::::::
+ *
+ *
+ *
+ */
+const intObs$: Observable<number> = interval(1000).take(5);
+const unsubscribeIntObs = intObs$.subscribe(console.log);
+
+
+/**
+ *
  *                                                                                                                              
  * .oPYo. 8                                        8      8                                              o                      
  * 8    8 8                                        8      8                                              8                      
@@ -90,7 +111,7 @@ console.log('Document will be clicked again after 3sec');
  */
 
 console.log('\n\nOperators');
-console.log('Observable.map')
+console.log('Observable.map');
 const ofNumMapToStringObs$: Observable<string> = Observable.of<number>(1, 2, 3, 4, 5)
   .map<string>((val: number) => `mapped to: ${val * 2}`);
 
@@ -186,6 +207,7 @@ const innerSwitchClicks$ = Observable.fromEvent<MockEvent>(innerSwitchDoc1, 'cli
 
 const switchMapObs$ = switchClicks$.switchMap<string>((event: MockEvent) => {
   return innerSwitchClicks$.map<string>((innerEvent: MockEvent) => {
+    console.log('mapping')
     return `Mapped from parent: ${event.clickTime}. Event time: ${innerEvent.clickTime}`;
   });
 });
@@ -198,3 +220,26 @@ switchDoc1.click();
 console.log('second click. Only the recent observable emits are handled with switchMap');
 switchDoc1.click();
 innerSwitchDoc1.click();
+
+
+/**
+ *
+ *
+ *                                                                                         
+ *                             8       o              o              o                  o  
+ *                             8                      8              8                  8  
+ * .oPYo. .oPYo. ooYoYo. odYo. 8oPYo. o8 odYo. .oPYo. 8     .oPYo.  o8P .oPYo. .oPYo.  o8P 
+ * 8    ' 8    8 8' 8  8 8' `8 8    8  8 8' `8 8oooo8 8     .oooo8   8  8oooo8 Yb..     8  
+ * 8    . 8    8 8  8  8 8   8 8    8  8 8   8 8.     8     8    8   8  8.       'Yb.   8  
+ * `YooP' `YooP' 8  8  8 8   8 `YooP'  8 8   8 `Yooo' 8oooo `YooP8   8  `Yooo' `YooP'   8  
+ * :.....::.....:..:..:....::..:.....::....::..:.....:......:.....:::..::.....::.....:::..:
+ * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ *
+ *
+ */
+
+
+const combo$ = combineLatest(interval(1000), interval(2000));
+const unsubscribeCombo = combo$.subscribe(console.log);
+setTimeout(unsubscribeCombo, 7000);
